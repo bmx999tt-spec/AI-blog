@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>埋もれたメールをAIが自動選別してLINE WORKSに通知する仕組みを作った話</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@400;700&display=swap');
+  :root {
+    --bg: #F7F6F2;
+    --surface: #FFFFFF;
+    --text: #1C1C1A;
+    --muted: #6A6A64;
+    --green: #1D6A4A;
+    --green-light: #E1F5EE;
+    --green-mid: #9FE1CB;
+    --blue: #185FA5;
+    --blue-light: #E6F1FB;
+    --border: #E0DED6;
+    --amber: #BA7517;
+    --amber-light: #FAEEDA;
+    --purple: #534AB7;
+    --purple-light: #EEEDFE;
+    --red: #A32D2D;
+    --red-light: #FCEBEB;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Noto Sans JP', sans-serif; background: var(--bg); color: var(--text); font-size: 16px; line-height: 1.85; }
+
+  .hero { background: var(--green); color: #fff; padding: 72px 32px 56px; overflow: hidden; position: relative; }
+  .hero::before { content: ''; position: absolute; top: -80px; right: -80px; width: 320px; height: 320px; border-radius: 50%; background: rgba(255,255,255,0.04); }
+  .hero-inner { max-width: 800px; margin: 0 auto; position: relative; z-index: 1; }
+  .hero-eyebrow { display: inline-block; background: rgba(255,255,255,0.15); color: #fff; font-size: 11px; letter-spacing: 0.1em; padding: 4px 14px; border-radius: 20px; margin-bottom: 20px; }
+  .hero h1 { font-family: 'Noto Serif JP', serif; font-size: clamp(20px, 3.5vw, 32px); font-weight: 700; line-height: 1.45; margin-bottom: 18px; }
+  .hero-desc { font-size: 14px; opacity: 0.82; max-width: 540px; line-height: 1.75; }
+  .hero-meta { margin-top: 28px; display: flex; gap: 20px; font-size: 12px; opacity: 0.65; flex-wrap: wrap; }
+
+  .wrap { max-width: 800px; margin: 0 auto; padding: 56px 24px 80px; }
+
+  .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 40px; }
+  .tag { background: var(--green-light); color: var(--green); font-size: 11px; font-weight: 700; padding: 4px 12px; border-radius: 20px; }
+
+  h2 { font-family: 'Noto Serif JP', serif; font-size: 21px; font-weight: 700; margin: 56px 0 18px; padding-bottom: 10px; border-bottom: 2px solid var(--green); }
+  h3 { font-size: 16px; font-weight: 700; margin: 28px 0 10px; }
+  p { margin-bottom: 16px; }
+  .lead { font-size: 16px; line-height: 1.95; margin-bottom: 20px; }
+
+  .callout { border-left: 4px solid var(--blue); background: var(--blue-light); padding: 14px 18px; border-radius: 0 8px 8px 0; margin: 20px 0; }
+  .callout p { margin: 0; font-size: 14px; color: #0C447C; }
+  .callout.green { border-left-color: var(--green); background: var(--green-light); }
+  .callout.green p { color: #0F6E56; }
+  .callout.amber { border-left-color: var(--amber); background: var(--amber-light); }
+  .callout.amber p { color: #633806; }
+
+  /* メール内訳グラフ */
+  .chart-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 28px 24px; margin: 24px 0; }
+  .chart-title { font-size: 13px; color: var(--muted); margin-bottom: 20px; text-align: center; }
+  .bar-row { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+  .bar-label { font-size: 13px; width: 170px; flex-shrink: 0; }
+  .bar-track { flex: 1; background: #EDEBE4; border-radius: 4px; height: 22px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 4px; display: flex; align-items: center; padding-left: 10px; font-size: 12px; font-weight: 700; color: #fff; }
+  .bar-fill.red { background: #E24B4A; }
+  .bar-fill.amber { background: var(--amber); }
+  .bar-fill.green { background: var(--green); }
+
+  /* フロー図 */
+  .flow-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 32px 24px; margin: 28px 0; }
+  .flow-title { font-size: 12px; color: var(--muted); text-align: center; letter-spacing: 0.06em; margin-bottom: 24px; }
+  .flow-row { display: flex; align-items: stretch; justify-content: center; flex-wrap: wrap; gap: 4px; }
+  .flow-node { display: flex; flex-direction: column; align-items: center; width: 148px; }
+  .flow-box { background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 14px 10px; text-align: center; width: 100%; }
+  .flow-box.blue { background: var(--blue-light); border-color: #B5D4F4; }
+  .flow-box.green { background: var(--green-light); border-color: var(--green-mid); }
+  .flow-box.amber { background: var(--amber-light); border-color: #FAC775; }
+  .flow-box.purple { background: var(--purple-light); border-color: #AFA9EC; }
+  .flow-icon-c { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 8px; }
+  .flow-icon-c.blue { background: var(--blue); }
+  .flow-icon-c.green { background: var(--green); }
+  .flow-icon-c.amber { background: var(--amber); }
+  .flow-icon-c.purple { background: var(--purple); }
+  .flow-box-title { font-size: 12px; font-weight: 700; margin-bottom: 4px; }
+  .flow-box-sub { font-size: 11px; color: var(--muted); line-height: 1.5; }
+  .flow-arrow-h { display: flex; align-items: center; color: var(--muted); font-size: 20px; align-self: center; padding-bottom: 16px; }
+  @media (max-width: 600px) {
+    .flow-row { flex-direction: column; align-items: center; }
+    .flow-arrow-h { transform: rotate(90deg); padding: 4px 0; }
+    .flow-node { width: 200px; }
+  }
+
+  /* 認証フロー図（JWT） */
+  .jwt-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin: 24px 0; }
+  .jwt-title { font-size: 12px; color: var(--muted); text-align: center; letter-spacing: 0.06em; margin-bottom: 20px; }
+  .jwt-flow { display: flex; flex-direction: column; gap: 8px; max-width: 480px; margin: 0 auto; }
+  .jwt-step { display: flex; align-items: center; gap: 12px; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; }
+  .jwt-num { width: 24px; height: 24px; background: var(--purple); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; flex-shrink: 0; }
+  .jwt-text strong { font-size: 13px; font-weight: 700; display: block; }
+  .jwt-text span { font-size: 11px; color: var(--muted); }
+  .jwt-arrow { text-align: center; color: var(--muted); font-size: 16px; }
+
+  /* ファイル構成 */
+  .file-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin: 20px 0; }
+  .file-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px; }
+  .file-top { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+  .file-icon { width: 32px; height: 32px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
+  .file-icon.json { background: var(--amber-light); }
+  .file-icon.py { background: var(--blue-light); }
+  .file-icon.yml { background: var(--purple-light); }
+  .file-name { font-family: monospace; font-size: 12px; font-weight: 700; color: var(--green); background: #F0EEE8; padding: 3px 8px; border-radius: 4px; }
+  .file-card p { font-size: 13px; color: var(--muted); margin: 0; line-height: 1.65; }
+
+  /* Secrets構成 */
+  .secrets-wrap { background: #1C1C1A; border-radius: 12px; padding: 20px 24px; margin: 20px 0; }
+  .secrets-title { color: rgba(255,255,255,0.5); font-size: 11px; letter-spacing: 0.1em; margin-bottom: 12px; }
+  .secret-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .secret-name { font-family: monospace; font-size: 12px; color: #5DCAA5; background: rgba(255,255,255,0.06); padding: 4px 10px; border-radius: 4px; min-width: 200px; }
+  .secret-desc { font-size: 12px; color: rgba(255,255,255,0.4); }
+
+  /* コスト表 */
+  .cost-table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+  .cost-table th { background: var(--green); color: #fff; padding: 10px 16px; text-align: left; font-weight: 500; }
+  .cost-table th:first-child { border-radius: 8px 0 0 0; }
+  .cost-table th:last-child { border-radius: 0 8px 0 0; }
+  .cost-table td { padding: 10px 16px; border-bottom: 1px solid var(--border); }
+  .cost-table tr:nth-child(even) td { background: var(--bg); }
+  .badge-free { background: var(--green-light); color: var(--green); font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 10px; }
+  .badge-pay { background: var(--amber-light); color: var(--amber); font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 10px; }
+
+  /* STEPリスト */
+  .steps { margin: 20px 0; }
+  .step-item { display: flex; gap: 16px; margin-bottom: 0; position: relative; }
+  .step-item:not(:last-child)::before { content: ''; position: absolute; left: 15px; top: 34px; bottom: -8px; width: 2px; background: var(--border); }
+  .step-num { width: 32px; height: 32px; background: var(--green); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; flex-shrink: 0; z-index: 1; }
+  .step-body { padding-bottom: 24px; flex: 1; }
+  .step-body strong { font-size: 15px; font-weight: 700; display: block; margin-bottom: 6px; padding-top: 4px; }
+  .step-body p { font-size: 14px; color: var(--muted); margin: 0; }
+
+  /* LINE WORKSモック */
+  .lw-wrap { background: #1A1A2E; border-radius: 14px; padding: 20px; margin: 20px 0; max-width: 400px; }
+  .lw-header { display: flex; align-items: center; gap: 10px; padding-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.08); margin-bottom: 12px; }
+  .lw-avatar { width: 36px; height: 36px; background: var(--green); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+  .lw-info .name { color: #fff; font-size: 13px; font-weight: 700; }
+  .lw-info .sub { color: rgba(255,255,255,0.45); font-size: 11px; }
+  .lw-bubble { background: rgba(255,255,255,0.07); border-radius: 8px; padding: 12px 14px; }
+  .lw-bubble p { color: #E0E0E0; font-size: 13px; margin: 0; line-height: 1.8; }
+  .lw-bubble .alert { color: #5DCAA5; font-weight: 700; }
+
+  /* トラブル */
+  .trouble-item { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 18px 20px; margin-bottom: 14px; }
+  .trouble-q { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 10px; }
+  .trouble-badge { background: var(--red-light); color: var(--red); font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 6px; flex-shrink: 0; margin-top: 2px; }
+  .trouble-q p { font-size: 15px; font-weight: 700; margin: 0; }
+  .trouble-a { display: flex; align-items: flex-start; gap: 10px; }
+  .trouble-badge-a { background: var(--green-light); color: var(--green); font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 6px; flex-shrink: 0; margin-top: 2px; }
+  .trouble-a p { font-size: 14px; color: var(--muted); margin: 0; }
+
+  /* 稼働結果 */
+  .result-box { background: var(--green); color: #fff; border-radius: 12px; padding: 28px; margin: 28px 0; }
+  .result-box h3 { color: #fff; font-size: 18px; margin-bottom: 8px; }
+  .result-box .sub { font-size: 14px; opacity: 0.8; margin-bottom: 24px; }
+  .result-stats { display: flex; flex-wrap: wrap; }
+  .result-stat { flex: 1; min-width: 100px; text-align: center; padding: 0 16px; border-right: 1px solid rgba(255,255,255,0.2); }
+  .result-stat:last-child { border-right: none; }
+  .result-stat .num { font-size: 28px; font-weight: 700; display: block; }
+  .result-stat .label { font-size: 11px; opacity: 0.7; margin-top: 4px; display: block; }
+
+  hr { border: none; border-top: 1px solid var(--border); margin: 48px 0; }
+  footer { background: var(--text); color: rgba(255,255,255,0.45); text-align: center; padding: 28px; font-size: 12px; }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-eyebrow">自動化 / AI活用 / 業務改善</div>
+    <h1>埋もれたメールをAIが自動選別して<br>LINE WORKSに通知する仕組みを作った話</h1>
+    <p class="hero-desc">大量の営業メールに埋もれた仕事依頼を見逃さないために。Gmail × Claude AI × LINE WORKS × GitHub Actionsで構築した完全自動通知システムの全記録です。</p>
+    <div class="hero-meta">
+      <span>2026年4月</span>
+      <span>株式会社Shinker（シンカー）</span>
+      <span>読了時間：約10分</span>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="tags">
+    <span class="tag">Gmail API</span>
+    <span class="tag">Claude AI</span>
+    <span class="tag">LINE WORKS</span>
+    <span class="tag">GitHub Actions</span>
+    <span class="tag">Python</span>
+    <span class="tag">JWT認証</span>
+    <span class="tag">業務自動化</span>
+  </div>
+
+  <p class="lead">会社のHPお問い合わせフォームから届くメール。その大半は営業メールや自動送信の迷惑メールです。でも、その中には本当の仕事依頼が埋まっています。それを毎回手作業で確認するのは非効率だと感じていました。</p>
+  <p>そこで「AIにメールを読ませ、仕事依頼だけを社内に自動通知する」仕組みを構築しました。実際に構築してみると、LINE Works APIの認証方式がJWT（Service Account認証）だったり、チャンネルIDの取得方法が独特だったりと、想定外の落とし穴がいくつかありました。この記事ではそのすべてを包み隠さず記録しています。</p>
+
+  <div class="callout">
+    <p>💡 この記事では構築手順だけでなく、実際にハマったポイントとその解決策も詳しく解説しています。同じ構成を試みる方の参考になれば幸いです。</p>
+  </div>
+
+  <!-- ① なぜ必要か -->
+  <h2>なぜこのシステムが必要だったか</h2>
+  <p>弊社のinfo@アドレスには、HPからの問い合わせメールが毎日大量に届きます。その内訳はおよそ以下のとおりです。</p>
+
+  <div class="chart-wrap">
+    <p class="chart-title">info@ に届くメールの内訳（概算）</p>
+    <div class="bar-row">
+      <span class="bar-label">営業・セールスメール</span>
+      <div class="bar-track"><div class="bar-fill red" style="width:70%">70%</div></div>
+    </div>
+    <div class="bar-row">
+      <span class="bar-label">自動送信・メルマガ</span>
+      <div class="bar-track"><div class="bar-fill amber" style="width:25%">25%</div></div>
+    </div>
+    <div class="bar-row">
+      <span class="bar-label">✅ 本当の仕事依頼</span>
+      <div class="bar-track"><div class="bar-fill green" style="width:5%">5%</div></div>
+    </div>
+  </div>
+
+  <p>営業部がこれらをすべて目で確認して選別するのは時間のムダです。しかも見落としのリスクもあります。「仕事依頼だけを自動検出してLINE WORKSの社内全体トークに通知する」ことができれば、営業部は通知が来たときだけ確認して即返信できます。</p>
+
+  <!-- ② 仕組み全体 -->
+  <h2>システム全体の仕組み</h2>
+  <p>自動通知フローは以下のとおりです。1時間ごとに自動で実行されます。</p>
+
+  <div class="flow-wrap">
+    <p class="flow-title">自動通知フロー（毎時9分・日本時間に実行）</p>
+    <div class="flow-row">
+      <div class="flow-node">
+        <div class="flow-box blue">
+          <div class="flow-icon-c blue">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+          </div>
+          <div class="flow-box-title">GitHub Actions</div>
+          <div class="flow-box-sub">毎時自動起動（UTC 0分）</div>
+        </div>
+      </div>
+      <div class="flow-arrow-h">→</div>
+      <div class="flow-node">
+        <div class="flow-box green">
+          <div class="flow-icon-c green">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 8l10 6 10-6"/></svg>
+          </div>
+          <div class="flow-box-title">Gmail API</div>
+          <div class="flow-box-sub">過去1時間のメールを取得</div>
+        </div>
+      </div>
+      <div class="flow-arrow-h">→</div>
+      <div class="flow-node">
+        <div class="flow-box amber">
+          <div class="flow-icon-c amber">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+          </div>
+          <div class="flow-box-title">Claude AI判定</div>
+          <div class="flow-box-sub">仕事依頼か YES/NO</div>
+        </div>
+      </div>
+      <div class="flow-arrow-h">→</div>
+      <div class="flow-node">
+        <div class="flow-box purple">
+          <div class="flow-icon-c purple">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+          </div>
+          <div class="flow-box-title">LINE WORKS通知</div>
+          <div class="flow-box-sub">社内全体トークへ送信</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout amber">
+    <p>⏰ GitHub ActionsのcronはUTC基準で動作します。<code>0 * * * *</code>と設定すると日本時間では毎時9分に実行されます。</p>
+  </div>
+
+  <!-- ③ 技術・コスト -->
+  <h2>使った技術とサービス</h2>
+
+  <table class="cost-table">
+    <thead>
+      <tr><th>サービス</th><th>役割</th><th>費用</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Gmail API（Google Cloud）</td><td>メールの読み込み</td><td><span class="badge-free">無料</span></td></tr>
+      <tr><td>Anthropic API（Claude）</td><td>メールの内容判定</td><td><span class="badge-pay">従量課金（月数十円〜）</span></td></tr>
+      <tr><td>LINE WORKS Bot API v2</td><td>社内への通知送信</td><td><span class="badge-free">無料</span></td></tr>
+      <tr><td>GitHub Actions</td><td>定期実行サーバー</td><td><span class="badge-free">無料枠内</span></td></tr>
+      <tr><td>Python 3.11</td><td>処理の本体</td><td><span class="badge-free">無料</span></td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout amber">
+    <p>💰 Anthropic APIの費用はメール1通の判定あたり約0.001円程度です。月1,000通処理しても1円未満で収まります。</p>
+  </div>
+
+  <!-- ④ LINE WORKS認証の仕組み -->
+  <h2>LINE WORKS API認証の仕組み（JWT方式）</h2>
+  <p>LINE WORKS Bot API v2では、メッセージ送信にService Account認証（JWT方式）が必要です。単純なClient ID＋Secretでは動きません。これが最大の落とし穴でした。</p>
+
+  <div class="jwt-wrap">
+    <p class="jwt-title">JWT認証フロー</p>
+    <div class="jwt-flow">
+      <div class="jwt-step">
+        <div class="jwt-num">1</div>
+        <div class="jwt-text">
+          <strong>JWTトークンを生成</strong>
+          <span>Client ID・Service Account・Private Keyを使ってJWT（署名付きトークン）を作成</span>
+        </div>
+      </div>
+      <div class="jwt-arrow">↓</div>
+      <div class="jwt-step">
+        <div class="jwt-num">2</div>
+        <div class="jwt-text">
+          <strong>アクセストークンを取得</strong>
+          <span>LINE Works認証サーバーにJWTを送信してアクセストークンを取得</span>
+        </div>
+      </div>
+      <div class="jwt-arrow">↓</div>
+      <div class="jwt-step">
+        <div class="jwt-num">3</div>
+        <div class="jwt-text">
+          <strong>メッセージを送信</strong>
+          <span>アクセストークンを使ってBot APIでトークルームにメッセージ送信</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <p>Developer ConsoleでClientAppを作成すると、Service AccountメールアドレスとPrivate Key（.keyファイル）が発行されます。これらをGitHub Secretsに登録して使います。</p>
+
+  <!-- ⑤ GitHub Secrets構成 -->
+  <h2>GitHub Secretsに登録する情報</h2>
+  <p>APIキーなどの秘密情報はコードに直接書かず、すべてGitHub Secretsに保管します。今回登録したSecretsは以下の7つです。</p>
+
+  <div class="secrets-wrap">
+    <div class="secrets-title">REPOSITORY SECRETS</div>
+    <div class="secret-row"><span class="secret-name">ANTHROPIC_API_KEY</span><span class="secret-desc">Claude AIのAPIキー</span></div>
+    <div class="secret-row"><span class="secret-name">GMAIL_CREDENTIALS</span><span class="secret-desc">credentials.jsonの中身</span></div>
+    <div class="secret-row"><span class="secret-name">GMAIL_TOKEN</span><span class="secret-desc">token.jsonの中身</span></div>
+    <div class="secret-row"><span class="secret-name">LW_CLIENT_ID</span><span class="secret-desc">LINE Works ClientApp ID</span></div>
+    <div class="secret-row"><span class="secret-name">LW_CLIENT_SECRET</span><span class="secret-desc">LINE Works Client Secret</span></div>
+    <div class="secret-row"><span class="secret-name">LW_SERVICE_ACCOUNT</span><span class="secret-desc">Service Accountのメールアドレス</span></div>
+    <div class="secret-row"><span class="secret-name">LW_PRIVATE_KEY</span><span class="secret-desc">.keyファイルの中身（PEM形式）</span></div>
+  </div>
+
+  <!-- ⑥ 各ファイルの役割 -->
+  <h2>各ファイルが何をしているか</h2>
+  <p>このシステムは5種類のファイルで動いています。それぞれの役割を整理します。</p>
+
+  <div class="file-grid">
+    <div class="file-card">
+      <div class="file-top">
+        <div class="file-icon json">🔑</div>
+        <span class="file-name">credentials.json</span>
+      </div>
+      <p>GoogleへのアクセスIDと秘密鍵が入った証明書ファイルです。Google Cloud ConsoleでOAuth 2.0クライアントIDを作成するとダウンロードできます。「このプログラムはGoogleに登録済みの正規アプリです」という身分証の役割を担います。</p>
+    </div>
+    <div class="file-card">
+      <div class="file-top">
+        <div class="file-icon json">🎫</div>
+        <span class="file-name">token.json</span>
+      </div>
+      <p>Gmailへのアクセス許可証です。最初に一度だけauth.pyを実行してGoogleにログインすると自動生成されます。以降はこのファイルで毎回ログイン不要になります。</p>
+    </div>
+    <div class="file-card">
+      <div class="file-top">
+        <div class="file-icon py">🐍</div>
+        <span class="file-name">auth.py</span>
+      </div>
+      <p>token.jsonを生成するための初回専用スクリプトです。一度実行すれば二度と使いません。ブラウザを開いてGoogleのOAuth認証を行い、token.jsonを作ります。</p>
+    </div>
+    <div class="file-card">
+      <div class="file-top">
+        <div class="file-icon py">⚙️</div>
+        <span class="file-name">main.py</span>
+      </div>
+      <p>システムの本体です。Gmailからメール取得→Claude AIで判定→JWT認証でLINE WORKSトークン取得→通知送信、という一連の処理をすべて担います。</p>
+    </div>
+    <div class="file-card">
+      <div class="file-top">
+        <div class="file-icon yml">🕐</div>
+        <span class="file-name">gmail-checker.yml</span>
+      </div>
+      <p>GitHub Actionsの設定ファイルです。「毎時0分（UTC）にmain.pyを実行せよ」というスケジュール命令が書かれています。PCの電源が切れていても動き続けます。</p>
+    </div>
+  </div>
+
+  <!-- ⑦ 構築手順 -->
+  <h2>構築の手順（全体像）</h2>
+
+  <div class="steps">
+    <div class="step-item">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <strong>Google Cloud ConsoleでGmail APIを有効化</strong>
+        <p>既存のGoogleアカウントでCloud Consoleにアクセスします。Gmail APIをオンにして、アプリケーションの種類「デスクトップアプリ」でOAuth 2.0クライアントIDを作成し、JSONをダウンロードします。OAuth同意画面のテストユーザーに自分のアドレスを追加することを忘れずに。</p>
+      </div>
+    </div>
+    <div class="step-item">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <strong>LINE WORKS Developer ConsoleでClientAppとBot作成</strong>
+        <p>スーパー管理者権限が必要です。ClientAppを作成してOAuth Scopeに「bot」を追加します。次にBotを登録して「複数人のトークルームに招待可」をオンにします。Service AccountのPrivate Keyも発行しておきます。</p>
+      </div>
+    </div>
+    <div class="step-item">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <strong>BotをALL業務連絡に招待＆チャンネルIDを取得</strong>
+        <p>Admin画面でBotの公開設定をオンにしてから、LINE WORKSアプリでトークルームにBotを招待します。チャンネルIDはトークルームの右上メニュー→「チャンネルID」から取得できます（数値ではなくUUID形式です）。</p>
+      </div>
+    </div>
+    <div class="step-item">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <strong>ローカルPCで初回Gmail認証</strong>
+        <p>auth.pyをPCで1回だけ実行します。ブラウザが開いてGoogleにログインするとtoken.jsonが生成されます。これ以降は不要です。</p>
+      </div>
+    </div>
+    <div class="step-item">
+      <div class="step-num">5</div>
+      <div class="step-body">
+        <strong>GitHubリポジトリをPrivateで作成</strong>
+        <p>main.pyとgmail-checker.ymlをアップロードします。GitHub Secretsに7つのAPIキー・認証情報を登録して情報漏洩を防ぎます。</p>
+      </div>
+    </div>
+    <div class="step-item">
+      <div class="step-num">6</div>
+      <div class="step-body">
+        <strong>Actions画面から手動テスト実行</strong>
+        <p>「Run workflow」で動作確認ができます。ログで「通知送信: 201」が表示されれば完成です。以降はUTC毎時0分（日本時間9分）に自動実行されます。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ⑧ 通知モック -->
+  <h2>実際にLINE WORKSに届く通知</h2>
+  <p>仕事依頼と判定されたメールが届くと、以下のようなメッセージが社内全体トークに自動送信されます。</p>
+
+  <div class="lw-wrap">
+    <div class="lw-header">
+      <div class="lw-avatar">📬</div>
+      <div class="lw-info">
+        <div class="name">問い合わせ通知Bot</div>
+        <div class="sub">自動通知システム</div>
+      </div>
+    </div>
+    <div class="lw-bubble">
+      <p>
+        <span class="alert">【仕事依頼あり】</span><br>
+        件名: ホームページ制作のご依頼について<br>
+        送信者: 山田太郎 &lt;yamada@example.co.jp&gt;<br><br>
+        早めにご確認ください。
+      </p>
+    </div>
+  </div>
+
+  <p>通知を受けた営業部は即座に元のメールを確認して返信できます。見落としゼロ、対応スピードも大幅に改善しました。</p>
+
+  <!-- ⑨ ハマりポイント -->
+  <h2>ハマったポイントと解決策</h2>
+
+  <div class="trouble-item">
+    <div class="trouble-q">
+      <span class="trouble-badge">問題1</span>
+      <p>LINE WORKS Developer Consoleにアクセスできない</p>
+    </div>
+    <div class="trouble-a">
+      <span class="trouble-badge-a">解決</span>
+      <p>スーパー管理者権限が必要でした。一般管理者では入れません。代表に権限付与を依頼することで解決しました。スーパー管理者は複数名に付与できます。</p>
+    </div>
+  </div>
+
+  <div class="trouble-item">
+    <div class="trouble-q">
+      <span class="trouble-badge">問題2</span>
+      <p>Gmail OAuth認証で「アクセスをブロック」エラーが出る</p>
+    </div>
+    <div class="trouble-a">
+      <span class="trouble-badge-a">解決</span>
+      <p>Google Cloud ConsoleのOAuth同意画面でテストユーザーに自分のアドレスを追加していませんでした。追加後すぐに解決しました。</p>
+    </div>
+  </div>
+
+  <div class="trouble-item">
+    <div class="trouble-q">
+      <span class="trouble-badge">問題3</span>
+      <p>BotをトークルームのBot招待で表示されない</p>
+    </div>
+    <div class="trouble-a">
+      <span class="trouble-badge-a">解決</span>
+      <p>Admin画面のサービス→BotでBotの公開設定が「非公開」になっていました。公開に変更後、表示されるようになりました。</p>
+    </div>
+  </div>
+
+  <div class="trouble-item">
+    <div class="trouble-q">
+      <span class="trouble-badge">問題4</span>
+      <p>HPフォームからの問い合わせが「仕事依頼」と判定されない</p>
+    </div>
+    <div class="trouble-a">
+      <span class="trouble-badge-a">解決</span>
+      <p>HPフォームの自動送信メールは送信者がinfo@になるため、AIが「自動送信メール」と誤判定していました。プロンプトに「送信者がinfo@でも本文に問い合わせ内容があればYES」と明示して解決しました。</p>
+    </div>
+  </div>
+
+  <div class="trouble-item">
+    <div class="trouble-q">
+      <span class="trouble-badge">問題5</span>
+      <p>LINE WORKS APIが401エラー（認証失敗）</p>
+    </div>
+    <div class="trouble-a">
+      <span class="trouble-badge-a">解決</span>
+      <p>LINE Works API v2はclient_credentials認証に非対応でした。JWT（Service Account認証）に切り替えて解決しました。PyJWTライブラリが必要です。</p>
+    </div>
+  </div>
+
+  <div class="trouble-item">
+    <div class="trouble-q">
+      <span class="trouble-badge">問題6</span>
+      <p>LINE WORKS APIが404エラー（送信先が見つからない）</p>
+    </div>
+    <div class="trouble-a">
+      <span class="trouble-badge-a">解決</span>
+      <p>チャンネルIDを数値で設定していましたが、正しくはUUID形式（例：72fbad9e-fe42-87d6-ad6f-99e7194b8493）でした。LINE WORKSアプリのトークルーム設定から「チャンネルID」を取得して解決しました。</p>
+    </div>
+  </div>
+
+  <!-- ⑩ 稼働結果 -->
+  <div class="result-box">
+    <h3>システム稼働結果</h3>
+    <p class="sub">GitHub Actionsでのテスト実行：通知送信 201（成功）</p>
+    <div class="result-stats">
+      <div class="result-stat">
+        <span class="num">1時間</span>
+        <span class="label">チェック間隔</span>
+      </div>
+      <div class="result-stat">
+        <span class="num">¥0</span>
+        <span class="label">月額固定費</span>
+      </div>
+      <div class="result-stat">
+        <span class="num">100%</span>
+        <span class="label">自動化率</span>
+      </div>
+      <div class="result-stat">
+        <span class="num">26秒</span>
+        <span class="label">実行時間</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- まとめ -->
+  <h2>まとめ</h2>
+  <p>今回作ったシステムの核心は「AIにメールの意図を判断させる」という部分です。従来のキーワードフィルタリングと違い、文脈を理解して判断するので誤検知が少ないです。</p>
+  <p>構築にかかった時間は設定作業含めて半日程度。月額費用はほぼゼロ。それでいて営業部の「メールを毎日確認する」という作業が丸ごとなくなりました。</p>
+  <p>LINE Works APIの認証周りは情報が少なく苦労しましたが、JWT方式とチャンネルIDのUUID形式さえ把握できれば同じ構成で再現できます。</p>
+
+  <div class="callout green">
+    <p>🚀 今後の拡張案：通知メッセージに本文の要約を含める、特定キーワードは即時通知（1時間待たずに）、複数のメールアドレスに対応するなど。</p>
+  </div>
+
+  <p>同じ課題を抱えている方の参考になれば幸いです。</p>
+
+  <hr>
+  <p style="font-size: 13px; color: var(--muted);">使用技術：Python 3.11 / google-api-python-client / anthropic / requests / PyJWT / cryptography / GitHub Actions / LINE WORKS Bot API v2</p>
+</div>
+
+<footer>
+  <p>株式会社Shinker（シンカー）｜2026年4月</p>
+</footer>
+
+</body>
+</html>
