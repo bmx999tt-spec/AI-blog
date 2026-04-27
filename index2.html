@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>伴走支援プラン | Instagram・TikTok | 株式会社Shinker</title>
+  <meta name="description" content="運用代行は高いと感じているあなたへ。プロと一緒に学びながら育てるInstagram・TikTok伴走支援プランを提供しています。月額8万円〜。" />
+  <meta property="og:title" content="伴走支援プラン | 株式会社Shinker" />
+  <meta property="og:description" content="運用代行より低コストで、ノウハウが手元に残る。Instagram・TikTok伴走支援プラン。" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#328c99',
+            'primary-dark': '#28707a',
+            'primary-vivid': '#379aa8',
+            accent: '#F59E0B',
+            dark: '#1a3a3f',
+            light: '#f0f9fa',
+          }
+        }
+      }
+    }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet" />
+  <style>
+    body { font-family: 'Noto Sans JP', sans-serif; }
+    html { scroll-behavior: smooth; }
+    .gradient-hero { background: linear-gradient(135deg, #1a3a3f 0%, #28707a 50%, #328c99 100%); }
+    .gradient-cta { background: linear-gradient(135deg, #28707a 0%, #328c99 100%); }
+    .faq-icon { transition: transform 0.3s ease; }
+    .faq-answer { overflow: hidden; }
+  </style>
+</head>
+<body class="text-gray-800 antialiased">
+
+  <!-- ===== HEADER ===== -->
+  <header id="header" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300" style="background-color: transparent;">
+    <div class="max-w-6xl mx-auto px-4 md:px-8 h-16 flex items-center justify-between">
+      <a href="#hero" class="text-white font-bold text-lg">
+        Shinker <span class="text-yellow-400">伴走支援</span>
+      </a>
+      <!-- Desktop Nav -->
+      <nav class="hidden md:flex items-center gap-6 text-white text-sm font-medium">
+        <a href="#features" class="hover:text-yellow-300 transition-colors">サービス内容</a>
+        <a href="#pricing" class="hover:text-yellow-300 transition-colors">料金</a>
+        <a href="#flow" class="hover:text-yellow-300 transition-colors">ご利用の流れ</a>
+        <a href="#faq" class="hover:text-yellow-300 transition-colors">FAQ</a>
+        <a href="https://shinker.co.jp/contact/" target="_blank" rel="noopener"
+           class="bg-yellow-400 hover:bg-yellow-300 text-gray-900 px-5 py-2 rounded-full font-bold transition-colors text-sm">
+          無料相談
+        </a>
+      </nav>
+      <!-- Hamburger -->
+      <button id="menu-btn" class="md:hidden text-white p-2" aria-label="メニュー">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
+      </button>
+    </div>
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="hidden md:hidden border-t border-white/10" style="background-color: #1a3a3f;">
+      <div class="max-w-6xl mx-auto px-4 py-4 flex flex-col gap-1 text-white text-sm font-medium">
+        <a href="#features" class="hover:text-yellow-300 transition-colors py-3 border-b border-white/10">サービス内容</a>
+        <a href="#pricing" class="hover:text-yellow-300 transition-colors py-3 border-b border-white/10">料金</a>
+        <a href="#flow" class="hover:text-yellow-300 transition-colors py-3 border-b border-white/10">ご利用の流れ</a>
+        <a href="#faq" class="hover:text-yellow-300 transition-colors py-3 border-b border-white/10">FAQ</a>
+        <a href="https://shinker.co.jp/contact/" target="_blank" rel="noopener"
+           class="bg-yellow-400 text-gray-900 px-5 py-3 rounded-full font-bold text-center hover:bg-yellow-300 transition-colors mt-3">
+          無料相談を申し込む →
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===== HERO ===== -->
+  <section id="hero" class="gradient-hero min-h-screen flex items-center pt-16">
+    <div class="max-w-6xl mx-auto px-4 md:px-8 py-24 md:py-32">
+      <div class="max-w-3xl">
+        <!-- Platform badges -->
+        <div class="flex flex-wrap gap-3 mb-8">
+          <span class="bg-white/20 text-white text-xs font-bold px-4 py-1.5 rounded-full backdrop-blur-sm">📸 Instagram</span>
+          <span class="bg-white/20 text-white text-xs font-bold px-4 py-1.5 rounded-full backdrop-blur-sm">🎵 TikTok</span>
+        </div>
+        <h1 class="text-3xl md:text-5xl lg:text-6xl font-black text-white leading-tight mb-6">
+          あなたのSNS、<br />
+          <span class="text-yellow-400">一緒に育てる</span><br />
+          パートナーがいます。
+        </h1>
+        <p class="text-white/80 text-lg md:text-xl mb-10 leading-relaxed">
+          企画・編集・フィードバックをプロが伴走。<br />
+          一人で悩まなくていい。毎月確実に、<br class="hidden sm:block" />あなたの発信力が上がっていきます。
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4">
+          <a href="https://shinker.co.jp/contact/" target="_blank" rel="noopener"
+             class="bg-yellow-400 hover:bg-yellow-300 text-gray-900 font-black px-8 py-4 rounded-full text-center text-lg transition-colors shadow-2xl">
+            無料相談を申し込む →
+          </a>
+          <a href="#pricing"
+             class="border-2 border-white text-white hover:bg-white hover:text-gray-900 font-bold px-8 py-4 rounded-full text-center text-lg transition-colors">
+            料金を見る
+          </a>
+        </div>
+        <p class="text-white/40 text-sm mt-8">※ 相談・見積もりは完全無料です</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== PROBLEM ===== -->
+  <section id="problem" class="py-20 md:py-28 bg-white">
+    <div class="max-w-6xl mx-auto px-4 md:px-8">
+      <div class="text-center mb-14">
+        <span class="text-primary font-bold text-sm uppercase tracking-widest">PROBLEM</span>
+        <h2 class="text-2xl md:text-4xl font-black text-gray-900 mt-2">こんなお悩み、ありませんか？</h2>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="bg-gray-50 rounded-2xl p-8 border-l-4 border-primary">
+          <div class="text-4xl mb-4">💸</div>
+          <h3 class="text-lg font-bold text-gray-900 mb-2">運用代行を調べたら月17万〜。<br />予算的に現実的ではない。</h3>
+          <p class="text-gray-500 text-sm leading-relaxed">頭ではわかっていても、固定費として毎月17万円以上は出せない。でも自力でやる自信もない。</p>
+        </div>
+        <div class="bg-gray-50 rounded-2xl p-8 border-l-4 border-primary">
+          <div class="text-4xl mb-4">📉</div>
+          <h3 class="text-lg font-bold text-gray-900 mb-2">自分でやってはいるけど、<br />再生数が全然伸びない。</h3>
+          <p class="text-gray-500 text-sm leading-relaxed">投稿は続けているのに効果が出ない。何が悪いのかわからず、試行錯誤が続いている。</p>
+        </div>
+        <div class="bg-gray-50 rounded-2xl p-8 border-l-4 border-primary">
+          <div class="text-4xl mb-4">📤</div>
+          <h3 class="text-lg font-bold text-gray-900 mb-2">外注したら"納品物"が来るだけで、<br />社内にノウハウが残らない。</h3>
+          <p class="text-gray-500 text-sm leading-relaxed">代行会社に任せると確かに投稿は増えるが、解約したら何も残らない。それが不安。</p>
+        </div>
+        <div class="bg-gray-50 rounded-2xl p-8 border-l-4 border-primary">
+          <div class="text-4xl mb-4">🤷</div>
+          <h3 class="text-lg font-bold text-gray-900 mb-2">流行りの型を真似しても、<br />自社に合った運用がわからない。</h3>
+          <p class="text-gray-500 text-sm leading-relaxed">参考動画を見て真似してみたが、なぜか再生されない。自分のビジネスに合う発信の型がわからない。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== COMPARISON ===== -->
+  <section id="comparison" class="py-20 md:py-28 bg-light">
+    <div class="max-w-6xl mx-auto px-4 md:px-8">
+      <div class="text-center mb-14">
+        <span class="text-primary font-bold text-sm uppercase tracking-widest">COMPARISON</span>
+        <h2 class="text-2xl md:text-4xl font-black text-gray-900 mt-2">3つの選択肢を比べると</h2>
+        <p class="text-gray-500 mt-4 text-base md:text-lg">伴走支援は、コストとノウハウの両方を手に入れる新しい選択肢です。</p>
+      </div>
+      <div class="overflow-x-auto rounded-2xl shadow-lg">
+        <table class="w-full min-w-[600px] bg-white text-sm">
+          <thead>
+            <tr>
+              <th class="p-5 text-left text-gray-400 font-medium bg-gray-50 w-40 text-xs">比較項目</th>
+              <th class="p-5 text-center bg-gray-50">
+                <div class="font-bold text-base text-gray-700">自力運用</div>
+              </th>
+              <th class="p-5 text-center bg-gray-50">
+                <div class="font-bold text-base text-gray-700">運用代行</div>
+                <div class="text-xs text-gray-400 mt-1">月17万円〜</div>
+              </th>
+              <th class="p-5 text-center border-t-4 border-primary" style="background-color: #f0f9fa;">
+                <div class="font-black text-primary text-base">伴走支援</div>
+                <div class="text-xs mt-1" style="color: #379aa8;">月8〜10万円</div>
+                <span class="inline-block bg-primary text-white text-xs px-3 py-0.5 rounded-full mt-2">おすすめ</span>
+              </th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-100">
+            <tr>
+              <td class="p-5 text-gray-500 font-medium text-xs">月額コスト</td>
+              <td class="p-5 text-center text-gray-600">低い</td>
+              <td class="p-5 text-center text-gray-600">高い（17万〜）</td>
+              <td class="p-5 text-center font-bold text-primary" style="background-color: #f0f9fa;">中（8〜10万円）</td>
+            </tr>
+            <tr>
+              <td class="p-5 text-gray-500 font-medium text-xs">ノウハウ蓄積</td>
+              <td class="p-5 text-center text-gray-400">試行錯誤のみ</td>
+              <td class="p-5 text-center text-gray-400">残らない</td>
+              <td class="p-5 text-center font-bold text-primary" style="background-color: #f0f9fa;">✓ 確実に残る</td>
+            </tr>
+            <tr>
+              <td class="p-5 text-gray-500 font-medium text-xs">動画クオリティ</td>
+              <td class="p-5 text-center text-gray-400">不安定</td>
+              <td class="p-5 text-center text-gray-600">高品質</td>
+              <td class="p-5 text-center font-bold text-primary" style="background-color: #f0f9fa;">✓ プロ品質を学べる</td>
+            </tr>
+            <tr>
+              <td class="p-5 text-gray-500 font-medium text-xs">企画力の成長</td>
+              <td class="p-5 text-center text-gray-400">なし</td>
+              <td class="p-5 text-center text-gray-400">なし</td>
+              <td class="p-5 text-center font-bold text-primary" style="background-color: #f0f9fa;">✓ 毎月成長する</td>
+            </tr>
+            <tr>
+              <td class="p-5 text-gray-500 font-medium text-xs">専門家の目線</td>
+              <td class="p-5 text-center text-gray-400">なし</td>
+              <td class="p-5 text-center text-gray-600">代行会社が実施</td>
+              <td class="p-5 text-center font-bold text-primary" style="background-color: #f0f9fa;">✓ 毎月フィードバック</td>
+            </tr>
+            <tr>
+              <td class="p-5 text-gray-500 font-medium text-xs">解約後の継続性</td>
+              <td class="p-5 text-center text-gray-400">変わらない</td>
+              <td class="p-5 text-center text-gray-400">ゼロになる</td>
+              <td class="p-5 text-center font-bold text-primary" style="background-color: #f0f9fa;">✓ スキルが残る</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="text-center text-primary font-bold mt-10 text-lg md:text-xl">
+        「外注費」ではなく、「<span class="underline decoration-2">教育投資</span>」として考える。<br class="sm:hidden" />それが伴走支援です。
+      </p>
+    </div>
+  </section>
+
+  <!-- ===== SOLUTION ===== -->
+  <section id="solution" class="py-20 md:py-28 bg-white">
+    <div class="max-w-6xl mx-auto px-4 md:px-8">
+      <div class="text-center mb-14">
+        <span class="text-primary font-bold text-sm uppercase tracking-widest">SOLUTION</span>
+        <h2 class="text-2xl md:text-4xl font-black text-gray-900 mt-2">
+          プロが隣にいる状態で、<br />自社運用を育てる
+        </h2>
+        <p class="text-gray-500 mt-6 text-base md:text-lg max-w-2xl mx-auto leading-relaxed">
+          運用代行のクオリティを"教材"として活用しながら、お客様自身の力で発信を強化していくプランです。毎月の積み重ねで、あなたの会社のSNS運用力が本物になっていきます。
+        </p>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5 max-w-3xl mx-auto">
+        <div class="flex items-start gap-4 p-6 bg-light rounded-xl">
+          <div class="w-10 h-10 bg-primary rounded-lg flex items-center justify-center flex-shrink-0 text-white font-black text-sm">01</div>
+          <div>
+            <h3 class="font-bold text-gray-900 mb-1">プロの編集プロセスをそのまま見られる</h3>
+            <p class="text-gray-500 text-sm">CapCutデータを共有し、編集の意図・カット割り・テキスト演出の理由まで解説します。</p>
+          </div>
+        </div>
+        <div class="flex items-start gap-4 p-6 bg-light rounded-xl">
+          <div class="w-10 h-10 bg-primary rounded-lg flex items-center justify-center flex-shrink-0 text-white font-black text-sm">02</div>
+          <div>
+            <h3 class="font-bold text-gray-900 mb-1">企画の型で再現性のある投稿が作れる</h3>
+            <p class="text-gray-500 text-sm">フォロワーが反応する企画を自分で立てられるようになる、思考のテンプレートを提供します。</p>
+          </div>
+        </div>
+        <div class="flex items-start gap-4 p-6 bg-light rounded-xl">
+          <div class="w-10 h-10 bg-primary rounded-lg flex items-center justify-center flex-shrink-0 text-white font-black text-sm">03</div>
+          <div>
+            <h3 class="font-bold text-gray-900 mb-1">作った企画を専門家がレビュー・改善</h3>
+            <p class="text-gray-500 text-sm">お客様が立てた企画を毎月プロの目でチェック。他のアイデア提案や改善フィードバックを提供します。</p>
+          </div>
+        </div>
+        <div class="flex items-start gap-4 p-6 bg-light rounded-xl">
+          <div class="w-10 h-10 bg-primary rounded-lg flex items-center justify-center flex-shrink-0 text-white font-black text-sm">04</div>
+          <div>
+            <h3 class="font-bold text-gray-900 mb-1">投稿ごとのフィードバックで品質が上がり続ける</h3>
+            <p class="text-gray-500 text-sm">やればやるほど上手くなる仕組み。月次MTGで具体的なアドバイスをお伝えします。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FEATURES ===== -->
+  <section id="features" class="py-20 md:py-28 bg-light">
+    <div class="max-w-6xl mx-auto px-4 md:px-8">
+      <div class="text-center mb-14">
+        <span class="text-primary font-bold text-sm uppercase tracking-widest">SERVICE</span>
+        <h2 class="text-2xl md:text-4xl font-black text-gray-900 mt-2">提供内容の詳細</h2>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="bg-white rounded-2xl p-7 shadow-sm hover:shadow-md transition-shadow">
+          <div class="text-4xl mb-5">🎬</div>
+          <h3 class="font-black text-gray-900 text-lg mb-3 leading-snug">月1本リール動画制作<br />＋ CapCutデータ共有</h3>
+          <p class="text-gray-500 text-sm leading-relaxed">完成動画だけでなく、CapCutのプロジェクトデータを共有します。編集の意図・カット割り・テキスト演出の理由まで丸ごと見せます。</p>
+        </div>
+        <div class="bg-white rounded-2xl p-7 shadow-sm hover:shadow-md transition-shadow">
+          <div class="text-4xl mb-5">📋</div>
+          <h3 class="font-black text-gray-900 text-lg mb-3 leading-snug">企画書テンプレート<br />提供</h3>
+          <p class="text-gray-500 text-sm leading-relaxed">「なぜこの企画か」という思考の型をテンプレートとして提供。フォロワーが反応する企画を、自分で再現できる仕組みを渡します。</p>
+        </div>
+        <div class="bg-white rounded-2xl p-7 shadow-sm hover:shadow-md transition-shadow">
+          <div class="text-4xl mb-5">💬</div>
+          <h3 class="font-black text-gray-900 text-lg mb-3 leading-snug">月1回<br />企画コンサルMTG</h3>
+          <p class="text-gray-500 text-sm leading-relaxed">お客様が立てた企画に対して、他のアイデア案・改善フィードバックをオンラインMTG（月1回・60〜90分）で提供します。</p>
+        </div>
+        <div class="bg-white rounded-2xl p-7 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden">
+          <div class="absolute top-4 right-4">
+            <span class="bg-pink-500 text-white text-xs font-bold px-3 py-1 rounded-full">Instagram限定</span>
+          </div>
+          <div class="text-4xl mb-5">📸</div>
+          <h3 class="font-black text-gray-900 text-lg mb-3 leading-snug">フィード投稿<br />フィードバック</h3>
+          <p class="text-gray-500 text-sm leading-relaxed">Instagramプランのみ。投稿ごとのデザイン・キャプション・ハッシュタグへのフィードバックを提供します。TikTokにはない付加価値です。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== PRICING ===== -->
+  <section id="pricing" class="py-20 md:py-28 bg-white">
+    <div class="max-w-6xl mx-auto px-4 md:px-8">
+      <div class="text-center mb-4">
+        <span class="text-primary font-bold text-sm uppercase tracking-widest">PRICING</span>
+        <h2 class="text-2xl md:text-4xl font-black text-gray-900 mt-2">料金プラン</h2>
+      </div>
+      <p class="text-center text-gray-400 text-sm mb-12">
+        ※ 運用代行は月17万円〜。本プランは最大53%のコストで、ノウハウがあなたの会社に残ります。
+      </p>
+
+      <div class="flex flex-col md:flex-row gap-6 max-w-3xl mx-auto">
+        <!-- TikTok -->
+        <div class="flex-1 border-2 border-gray-200 rounded-2xl p-8 hover:border-primary transition-colors">
+          <div class="text-4xl mb-3">🎵</div>
+          <h3 class="text-xl font-black text-gray-900 mb-1">TikTokプラン</h3>
+          <div class="my-6">
+            <span class="text-4xl font-black text-gray-900">¥80,000</span>
+            <span class="text-gray-400 text-sm ml-2">/ 月（税別）</span>
+          </div>
+          <ul class="space-y-3 mb-8 text-sm">
+            <li class="flex items-start gap-3">
+              <span class="font-bold mt-0.5 flex-shrink-0" style="color: #328c99;">✓</span>
+              <span>月1本リール動画制作</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="font-bold mt-0.5 flex-shrink-0" style="color: #328c99;">✓</span>
+              <span>CapCutデータ共有（編集意図の解説付き）</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="font-bold mt-0.5 flex-shrink-0" style="color: #328c99;">✓</span>
+              <span>企画書テンプレート提供</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="font-bold mt-0.5 flex-shrink-0" style="color: #328c99;">✓</span>
+              <span>月1回オンラインMTGコンサルティング</span>
+            </li>
+          </ul>
+          <a href="https://shinker.co.jp/contact/" target="_blank" rel="noopener"
+             class="block text-center border-2 border-primary text-primary font-bold py-3 rounded-full hover:bg-primary hover:text-white transition-colors">
+            このプランで相談する
+          </a>
+        </div>
+
+        <!-- Instagram (Recommended) -->
+        <div class="flex-1 border-2 rounded-2xl p-8 relative shadow-xl" style="border-color: #328c99;">
+          <div class="absolute -top-4 left-1/2 -translate-x-1/2">
+            <span class="text-white text-sm font-bold px-6 py-1.5 rounded-full" style="background-color: #328c99;">おすすめ</span>
+          </div>
+          <div class="text-4xl mb-3">📸</div>
+          <h3 class="text-xl font-black text-gray-900 mb-1">Instagramプラン</h3>
+          <div class="my-6">
+            <span class="text-4xl font-black" style="color: #328c99;">¥100,000</span>
+            <span class="text-gray-400 text-sm ml-2">/ 月（税別）</span>
+          </div>
+          <ul class="space-y-3 mb-4 text-sm">
+            <li class="flex items-start gap-3">
+              <span class="font-bold mt-0.5 flex-shrink-0" style="color: #328c99;">✓</span>
+              <span>月1本リール動画制作</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="font-bold mt-0.5 flex-shrink-0" style="color: #328c99;">✓</span>
+              <span>CapCutデータ共有（編集意図の解説付き）</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="font-bold mt-0.5 flex-shrink-0" style="color: #328c99;">✓</span>
+              <span>企画書テンプレート提供</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="font-bold mt-0.5 flex-shrink-0" style="color: #328c99;">✓</span>
+              <span>月1回オンラインMTGコンサルティング</span>
+            </li>
+            <li class="flex items-start gap-3 p-3 rounded-xl -mx-1" style="background-color: #fff0f5;">
+              <span class="text-pink-500 font-bold mt-0.5 flex-shrink-0">✓</span>
+              <span>
+                <span class="font-bold text-pink-600">＋ フィード投稿フィードバック</span>
+                <br /><span class="text-gray-400 text-xs">（TikTokとの差額¥20,000分）</span>
+              </span>
+            </li>
+          </ul>
+          <p class="text-xs text-gray-400 mb-6">Instagramはリールに加えフィード投稿のフィードバックが含まれるため、料金が上乗せになります。</p>
+          <a href="https://shinker.co.jp/contact/" target="_blank" rel="noopener"
+             class="block text-center text-white font-bold py-3 rounded-full transition-colors shadow-md"
+             style="background-color: #328c99;"
+             onmouseover="this.style.backgroundColor='#28707a'" onmouseout="this.style.backgroundColor='#328c99'">
+            このプランで相談する
+          </a>
+        </div>
+      </div>
+
+      <p class="text-center text-gray-400 text-sm mt-8">初回のご相談は無料です。まずはお気軽にお問い合わせください。 / 最低契約期間：3ヶ月〜</p>
+    </div>
+  </section>
+
+  <!-- ===== FLOW ===== -->
+  <section id="flow" class="py-20 md:py-28 bg-light">
+    <div class="max-w-6xl mx-auto px-4 md:px-8">
+      <div class="text-center mb-14">
+        <span class="text-primary font-bold text-sm uppercase tracking-widest">FLOW</span>
+        <h2 class="text-2xl md:text-4xl font-black text-gray-900 mt-2">ご利用の流れ</h2>
+      </div>
+      <div class="max-w-2xl mx-auto">
+        <div class="relative">
+          <div class="absolute left-8 top-8 bottom-8 w-0.5 md:left-10" style="background-color: rgba(50,140,153,0.2);"></div>
+          <div class="space-y-10">
+            <div class="flex gap-6 md:gap-8 relative">
+              <div class="flex-shrink-0 w-16 h-16 md:w-20 md:h-20 rounded-full flex flex-col items-center justify-center text-white relative z-10 shadow-lg" style="background-color: #328c99;">
+                <span class="text-xs font-medium opacity-80">STEP</span>
+                <span class="text-2xl font-black">1</span>
+              </div>
+              <div class="pt-3">
+                <h3 class="text-lg font-black text-gray-900 mb-2">無料相談・ヒアリング</h3>
+                <p class="text-gray-500 text-sm leading-relaxed">現状のSNS状況や目標をお伺いします。Instagram・TikTokどちらかを選んでいただき、最適なプランをご提案します。費用は一切かかりません。</p>
+              </div>
+            </div>
+            <div class="flex gap-6 md:gap-8 relative">
+              <div class="flex-shrink-0 w-16 h-16 md:w-20 md:h-20 rounded-full flex flex-col items-center justify-center text-white relative z-10 shadow-lg" style="background-color: #328c99;">
+                <span class="text-xs font-medium opacity-80">STEP</span>
+                <span class="text-2xl font-black">2</span>
+              </div>
+              <div class="pt-3">
+                <h3 class="text-lg font-black text-gray-900 mb-2">プラン確定・キックオフMTG</h3>
+                <p class="text-gray-500 text-sm leading-relaxed">プランを確定後、初回キックオフMTGを実施。方向性・ターゲット・投稿のトーンを一緒に決めていきます。</p>
+              </div>
+            </div>
+            <div class="flex gap-6 md:gap-8 relative">
+              <div class="flex-shrink-0 w-16 h-16 md:w-20 md:h-20 rounded-full flex flex-col items-center justify-center text-white relative z-10 shadow-lg" style="background-color: #328c99;">
+                <span class="text-xs font-medium opacity-80">STEP</span>
+                <span class="text-2xl font-black">3</span>
+              </div>
+              <div class="pt-3">
+                <h3 class="text-lg font-black text-gray-900 mb-2">月次サイクル開始</h3>
+                <p class="text-gray-500 text-sm leading-relaxed">動画制作・テンプレート提供・企画コンサル（月1回MTG）が毎月のルーティンで回り始めます。毎月少しずつ上手くなっていきます。</p>
+              </div>
+            </div>
+            <div class="flex gap-6 md:gap-8 relative">
+              <div class="flex-shrink-0 w-16 h-16 md:w-20 md:h-20 rounded-full flex flex-col items-center justify-center text-white relative z-10 shadow-lg" style="background-color: #379aa8;">
+                <span class="text-xs font-medium opacity-80">GOAL</span>
+                <span class="text-2xl">🚀</span>
+              </div>
+              <div class="pt-3">
+                <h3 class="text-lg font-black text-gray-900 mb-2">成果確認・継続改善</h3>
+                <p class="text-gray-500 text-sm leading-relaxed">数値を振り返りながら、より成果が出る方向へ継続改善。ご希望の方は運用代行プランへのステップアップも可能です。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FAQ ===== -->
+  <section id="faq" class="py-20 md:py-28 bg-white">
+    <div class="max-w-6xl mx-auto px-4 md:px-8">
+      <div class="text-center mb-14">
+        <span class="text-primary font-bold text-sm uppercase tracking-widest">FAQ</span>
+        <h2 class="text-2xl md:text-4xl font-black text-gray-900 mt-2">よくある質問</h2>
+      </div>
+      <div class="max-w-3xl mx-auto space-y-3">
+
+        <div class="border border-gray-200 rounded-xl overflow-hidden">
+          <button class="faq-btn w-full flex items-center justify-between p-6 text-left hover:bg-gray-50 transition-colors">
+            <span class="font-bold text-gray-900 pr-4 text-sm md:text-base">動画の撮影は自分でやるのですか？</span>
+            <svg class="faq-icon w-5 h-5 text-primary flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            </svg>
+          </button>
+          <div class="faq-answer hidden px-6 pb-6 text-gray-500 text-sm leading-relaxed">
+            はい、撮影素材はお客様にご用意いただきます。ただし、「何を撮ればいいか」は企画MTGでご一緒に考えますので、ゼロから悩む必要はありません。編集・企画・構成はすべてサポートします。
+          </div>
+        </div>
+
+        <div class="border border-gray-200 rounded-xl overflow-hidden">
+          <button class="faq-btn w-full flex items-center justify-between p-6 text-left hover:bg-gray-50 transition-colors">
+            <span class="font-bold text-gray-900 pr-4 text-sm md:text-base">動画制作の経験がなくても大丈夫ですか？</span>
+            <svg class="faq-icon w-5 h-5 text-primary flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            </svg>
+          </button>
+          <div class="faq-answer hidden px-6 pb-6 text-gray-500 text-sm leading-relaxed">
+            まったく問題ありません。CapCutデータの共有時に編集手順をわかりやすく解説しますので、初心者の方でも理解できる内容です。「見て学ぶ」ことから始められます。
+          </div>
+        </div>
+
+        <div class="border border-gray-200 rounded-xl overflow-hidden">
+          <button class="faq-btn w-full flex items-center justify-between p-6 text-left hover:bg-gray-50 transition-colors">
+            <span class="font-bold text-gray-900 pr-4 text-sm md:text-base">最低契約期間はありますか？</span>
+            <svg class="faq-icon w-5 h-5 text-primary flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            </svg>
+          </button>
+          <div class="faq-answer hidden px-6 pb-6 text-gray-500 text-sm leading-relaxed">
+            3ヶ月からのご契約をお願いしています。SNSの効果が出るまでには一定の期間が必要なため、最低3ヶ月を推奨しています。
+          </div>
+        </div>
+
+        <div class="border border-gray-200 rounded-xl overflow-hidden">
+          <button class="faq-btn w-full flex items-center justify-between p-6 text-left hover:bg-gray-50 transition-colors">
+            <span class="font-bold text-gray-900 pr-4 text-sm md:text-base">InstagramとTikTokの両方を依頼できますか？</span>
+            <svg class="faq-icon w-5 h-5 text-primary flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            </svg>
+          </button>
+          <div class="faq-answer hidden px-6 pb-6 text-gray-500 text-sm leading-relaxed">
+            現在は1プラットフォームでのご契約となります。まずは1つに集中することで、より効果的に成長できると考えています。どちらを選ぶか迷う場合は、無料相談でご一緒に検討します。
+          </div>
+        </div>
+
+        <div class="border border-gray-200 rounded-xl overflow-hidden">
+          <button class="faq-btn w-full flex items-center justify-between p-6 text-left hover:bg-gray-50 transition-colors">
+            <span class="font-bold text-gray-900 pr-4 text-sm md:text-base">運用代行への切り替えはできますか？</span>
+            <svg class="faq-icon w-5 h-5 text-primary flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            </svg>
+          </button>
+          <div class="faq-answer hidden px-6 pb-6 text-gray-500 text-sm leading-relaxed">
+            はい、いつでもご相談いただけます。伴走支援を通じてアカウントの方向性や運用方法が定まった後に運用代行へ移行するケースも多く、スムーズに連携できます。
+          </div>
+        </div>
+
+        <div class="border border-gray-200 rounded-xl overflow-hidden">
+          <button class="faq-btn w-full flex items-center justify-between p-6 text-left hover:bg-gray-50 transition-colors">
+            <span class="font-bold text-gray-900 pr-4 text-sm md:text-base">コンサルのMTGはどのように実施しますか？</span>
+            <svg class="faq-icon w-5 h-5 text-primary flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            </svg>
+          </button>
+          <div class="faq-answer hidden px-6 pb-6 text-gray-500 text-sm leading-relaxed">
+            月1回のオンラインMTG（Zoom / Google Meet）で実施します。企画のレビュー・フィードバック・翌月の方針を60〜90分程度でお伝えします。全国どこからでもご参加いただけます。
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CTA ===== -->
+  <section id="cta" class="py-20 md:py-28 gradient-cta">
+    <div class="max-w-6xl mx-auto px-4 md:px-8 text-center">
+      <h2 class="text-2xl md:text-4xl font-black text-white mb-4">
+        まずは無料で<br class="sm:hidden" />話してみてください
+      </h2>
+      <p class="text-white/80 text-base md:text-lg mb-10 max-w-xl mx-auto leading-relaxed">
+        プランの詳細・自社に合うかどうかを相談だけでも大歓迎です。<br />費用・強制的な勧誘は一切ありません。
+      </p>
+      <a href="https://shinker.co.jp/contact/" target="_blank" rel="noopener"
+         class="inline-block bg-yellow-400 hover:bg-yellow-300 text-gray-900 font-black px-12 py-5 rounded-full text-xl transition-colors shadow-2xl">
+        無料相談を申し込む →
+      </a>
+      <p class="text-white/40 text-sm mt-6">相談・見積もりは完全無料 / 最短翌営業日にご連絡します</p>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer id="footer" class="py-12" style="background-color: #1a3a3f;">
+    <div class="max-w-6xl mx-auto px-4 md:px-8">
+      <div class="flex flex-col md:flex-row justify-between items-center gap-6">
+        <div>
+          <p class="text-white font-bold text-xl">Shinker <span style="color: #328c99;">伴走支援プラン</span></p>
+          <p class="text-white/40 text-sm mt-1">株式会社Shinker</p>
+        </div>
+        <nav class="flex flex-wrap justify-center gap-6 text-white/50 text-sm">
+          <a href="#features" class="hover:text-white transition-colors">サービス内容</a>
+          <a href="#pricing" class="hover:text-white transition-colors">料金</a>
+          <a href="#flow" class="hover:text-white transition-colors">ご利用の流れ</a>
+          <a href="#faq" class="hover:text-white transition-colors">FAQ</a>
+          <a href="https://shinker.co.jp/contact/" target="_blank" rel="noopener" class="hover:text-white transition-colors">お問い合わせ</a>
+        </nav>
+      </div>
+      <div class="border-t border-white/10 mt-8 pt-8 text-center">
+        <p class="text-white/20 text-sm">© 2024 株式会社Shinker. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // ハンバーガーメニュー
+    const menuBtn = document.getElementById('menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    menuBtn.addEventListener('click', () => {
+      mobileMenu.classList.toggle('hidden');
+    });
+    mobileMenu.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => mobileMenu.classList.add('hidden'));
+    });
+
+    // スクロール時ヘッダー背景変化
+    const header = document.getElementById('header');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 50) {
+        header.style.backgroundColor = '#1a3a3f';
+        header.style.boxShadow = '0 4px 20px rgba(0,0,0,0.4)';
+      } else {
+        header.style.backgroundColor = 'transparent';
+        header.style.boxShadow = 'none';
+      }
+    });
+
+    // FAQアコーディオン
+    document.querySelectorAll('.faq-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const answer = btn.nextElementSibling;
+        const icon = btn.querySelector('.faq-icon');
+        answer.classList.toggle('hidden');
+        icon.style.transform = answer.classList.contains('hidden') ? 'rotate(0deg)' : 'rotate(180deg)';
+      });
+    });
+  </script>
+</body>
+</html>
